@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <h3>Raspberry Pi Robot Car</h3>
         <p>An autonomous vehicle with obstacle avoidance capabilities, controlled via Raspberry Pi GPIO and Python. Features both manual and autonomous driving modes.</p>
         <div class="tech-stack">Python · Raspberry Pi · gpiozero · L298N · Ultrasonic Sensor</div>
-        <button class="action-btn" onclick="window.open('../portfolio/robotics/raspberry_1.html', '_blank')">
+        <button class="action-btn" onclick="window.open('../atsulu_portfolio/robotics/raspberry_1.html', '_blank')">
             <i class="fas fa-external-link-alt"></i> View Project Details
         </button>
     </div>
