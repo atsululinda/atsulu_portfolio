@@ -551,7 +551,7 @@ complete expertise of the sport's behavior, fairness, and underlying probabilist
         <h3>Trading Automation System</h3>
         <p>trading system that autonomously executes trades based on market volatility and price trends, implementing sophisticated risk management protocols.</p>
         <div class="tech-stack">Python · Raspberry Pi · Deriv api · xml</div>
-        <button class="action-btn" onclick="window.open('../portfolio/automation/trading_automation.html', '_blank')">
+        <button class="action-btn" onclick="window.open('../atsulu_portfolio/automation/trading_automation.html', '_blank')">
             <i class="fas fa-external-link-alt"></i> View Project Details
         </button>
     </div>
@@ -560,7 +560,7 @@ complete expertise of the sport's behavior, fairness, and underlying probabilist
         <h3>AI-powered news generation and distribution system</h3>
         <p>I engineered an AI-powered news generation and distribution system that automatically curates, summarizes, and publishes news content with human-like quality.</p>
         <div class="tech-stack">Python · Raspberry Pi · Html </div>
-        <button class="action-btn" onclick="window.open('../portfolio/automation/ai_automation.html', '_blank')">
+        <button class="action-btn" onclick="window.open('../atsulu_portfolio/automation/ai_automation.html', '_blank')">
             <i class="fas fa-external-link-alt"></i> View Project Details
         </button>
     </div>
@@ -628,7 +628,7 @@ natural disasters like sites of earthquakes or volcanic eruptions</p>
             </p>
             
             <div style="text-align: center;">
-                <a href="../portfolio/website_samples/website_samples.html" 
+                <a href="../atsulu_portfolio/website_samples/website_samples.html" 
                    style="display: inline-block; 
                           padding: 12px 30px; 
                           background: linear-gradient(135deg, #0066ff, #00d2ff); 
