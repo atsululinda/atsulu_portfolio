@@ -574,16 +574,6 @@ complete expertise of the sport's behavior, fairness, and underlying probabilist
     html: `
         <div class="category-content">
             <div class="item">
-                <h3>Earth‘s history</h3>
-                <p>The planet Earth has a more than 4.6 billion year history, over the course of which it has undergone substantial changes in the conditions it offers life. All living organisms have had to
-adapt to these changes; those that were unable died out. However the survivors have also contributed to the creation and alteration of these life conditions. This process of mutual
-influence between different elements of the environment is called coevolution, and it has contributed considerably to changing our planet.</p>
-                <div class="publication">Published in Lifeliqe's lesson plan!</div>
-                <a href="articles/presentation2.pdf" class="pdf-link" target="_blank">
-                    <i class="fas fa-file-pdf"></i> View PDF
-                </a>
-            </div>
-            <div class="item">
                 <h3>Using Learning Analytics to Explore Responses from
 Student Conversations with Chatbot</h3>
                 <p>The planet Earth has a more than 4.6 billion year history, over the course of which it has undergone substantial changes in the conditions it offers life. All living organisms have had to
