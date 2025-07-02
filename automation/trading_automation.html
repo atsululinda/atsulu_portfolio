@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Trading Automation | Dennis Maran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #0a0a0f;
+            --light-blue: #ff8fab;
+            --glow-blue: #ff6b9d;
+            --accent-blue: #a855f7;
+            --glass-bg: rgba(20, 15, 25, 0.7);
+            --glass-border: rgba(255, 107, 157, 0.3);
+            --success-green: #bbf7d0;
+            --warning-orange: #facc15;
+            --error-red: #fb7185;
+        }
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+        body {
+            background-color: var(--dark-blue);
+            color: var(--light-blue);
+            min-height: 100vh;
+            padding: 30px;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(255, 107, 157, 0.08), transparent 25%),
+                radial-gradient(circle at 80% 65%, rgba(168, 85, 247, 0.08), transparent 35%);
+            font-family: 'Roboto', sans-serif;
+        }
+    
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    
+        .project-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+    
+        h1 {
+            color: var(--glow-blue);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+            font-size: 2.5rem;
+        }
+    
+        h2 {
+            color: var(--accent-blue);
+            margin: 25px 0 15px;
+            font-size: 1.8rem;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+            padding-bottom: 10px;
+        }
+    
+        h3 {
+            color: var(--light-blue);
+            margin: 20px 0 10px;
+            font-size: 1.4rem;
+        }
+    
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+    
+        .code-container {
+            background: rgba(20, 15, 25, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+    
+        pre {
+            color: var(--glow-blue);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+    
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+    
+        .tech-tag {
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--glow-blue);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+    
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(to right, var(--accent-blue), var(--glow-blue));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+        }
+    
+        .action-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+            transform: translateY(-3px);
+        }
+    
+        .action-btn i {
+            margin-right: 10px;
+        }
+    
+        .bot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+    
+        .bot-card {
+            background: rgba(20, 15, 25, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+    
+        .bot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.2);
+        }
+    
+        .bot-card h3 {
+            color: var(--glow-blue);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+    
+        .bot-card h3 i {
+            margin-right: 10px;
+            color: var(--accent-blue);
+        }
+    
+        .bot-card p {
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+    
+        .download-btn {
+            display: inline-block;
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--glow-blue);
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+    
+        .download-btn:hover {
+            background: rgba(255, 107, 157, 0.4);
+            color: white;
+        }
+    
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+    
+        .metric-card {
+            background: rgba(20, 15, 25, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+    
+        .metric-value {
+            font-size: 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--glow-blue);
+            margin: 10px 0;
+        }
+    
+        .metric-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+    
+        .success {
+            color: var(--success-green);
+        }
+    
+        .warning {
+            color: var(--warning-orange);
+        }
+    
+        .error {
+            color: var(--error-red);
+        }
+    
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+    
+            .project-panel {
+                padding: 20px;
+            }
+    
+            h1 {
+                font-size: 2rem;
+            }
+    
+            .bot-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="project-panel">
+            <h1>Advanced Trading Automation System</h1>
+            <p>I developed a sophisticated algorithmic trading system that autonomously executes trades on Deriv's synthetic indices, implementing multi-strategy approaches with institutional-grade risk management protocols. The system combines technical indicators, volatility analysis, and adaptive position sizing to optimize performance across market conditions.</p>
+            
+            <div class="tech-stack">
+                <span class="tech-tag">Deriv API</span>
+                <span class="tech-tag">Blockly</span>
+                <span class="tech-tag">Algorithmic Trading</span>
+                <span class="tech-tag">Risk Management</span>
+                <span class="tech-tag">Technical Analysis</span>
+                <span class="tech-tag">Quantitative Finance</span>
+            </div>
+
+            <h2>System Architecture</h2>
+            <p>The trading system employs a modular architecture with separate components for market analysis, trade execution, and risk management. It processes real-time market data through multiple technical indicators to identify high-probability trading opportunities while dynamically adjusting position sizes based on account equity and current volatility.</p>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value success">58%</div>
+                    <div class="metric-label">Win Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value success">1.42</div>
+                    <div class="metric-label">Profit Factor</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value warning">2.1%</div>
+                    <div class="metric-label">Max Drawdown</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value success">82%</div>
+                    <div class="metric-label">Avg Payout</div>
+                </div>
+            </div>
+
+            <h2>Trading Strategies</h2>
+            
+            <div class="bot-grid">
+                <div class="bot-card">
+                    <h3><i class="fas fa-robot"></i> QuantumTrader Pro</h3>
+                    <p>Advanced multi-indicator strategy combining Bollinger Bands, RSI, and ATR with martingale money management for high-volatility conditions.</p>
+                    <a href="automation/QuantumTrader Pro.xml" class="download-btn" download="QuantumTrader_Pro.xml">
+                        <i class="fas fa-download"></i> Download Strategy
+                    </a>
+                </div>
+                
+                <div class="bot-card">
+                    <h3><i class="fas fa-chart-line"></i> EliteTrader Pro</h3>
+                    <p>Trend-following system with multi-timeframe EMA analysis, dynamic grid spacing, and adaptive lot sizing based on volatility thresholds.</p>
+                    <a href="automation/EliteTrader Pro.xml" class="download-btn" download="EliteTrader_Pro.xml">
+                        <i class="fas fa-download"></i> Download Strategy
+                    </a>
+                </div>
+                
+                <div class="bot-card">
+                    <h3><i class="fas fa-project-diagram"></i> GridMaster Lite</h3>
+                    <p>Basic grid trading system with ATR-based spacing, volatility-adjusted position sizing, and strict daily profit/loss limits.</p>
+                    <a href="automation/GridMaster Lite.xml" class="download-btn" download="GridMaster_Lite.xml">
+                        <i class="fas fa-download"></i> Download Strategy
+                    </a>
+                </div>
+                
+                <div class="bot-card">
+                    <h3><i class="fas fa-shield-alt"></i> Conservative</h3>
+                    <p>Low-risk approach using last digit analysis with strict entry filters and minimal exposure per trade.</p>
+                    <a href="automation/conservative.xml" class="download-btn" download="conservative.xml">
+                        <i class="fas fa-download"></i> Download Strategy
+                    </a>
+                </div>
+                
+                <div class="bot-card">
+                    <h3><i class="fas fa-balance-scale"></i> MicroHedge</h3>
+                    <p>Basic hedging strategy for small accounts with fixed trade amounts and simple call/put execution.</p>
+                    <a href="automation/MicroHedge.xml" class="download-btn" download="MicroHedge.xml">
+                        <i class="fas fa-download"></i> Download Strategy
+                    </a>
+                </div>
+            </div>
+
+            <h2>Key Features</h2>
+            
+            <h3>Multi-Indicator Analysis</h3>
+            <p>The system processes multiple technical indicators including ATR for volatility, RSI for overbought/oversold conditions, and Bollinger Bands for mean-reversion opportunities. Indicator convergence creates high-probability trade signals.</p>
+            
+            <h3>Adaptive Risk Management</h3>
+            <p>Dynamic position sizing based on current account balance and volatility levels. The system automatically reduces position size during high volatility and increases during optimal conditions while maintaining strict 2% risk per trade.</p>
+            
+            <div class="code-container">
+                <pre><code>
+// Risk Management Algorithm:
+1. Calculate current volatility (ATR 14-period)
+2. Determine account risk percentage (1-2%)
+3. Adjust lot size based on:
+   - Account balance
+   - Current volatility
+   - Consecutive win/loss streak
+4. Enforce daily stop loss (5% of balance)
+5. Implement profit target (15% of balance)
+                </code></pre>
+            </div>
+            
+            <h3>Loss Prevention Protocol</h3>
+            <p>Advanced loss tracking with automatic pause functionality after 3 consecutive losses. The system implements a cooling-off period and requires manual reactivation after significant drawdown events.</p>
+            
+            <h3>Multi-Timeframe Trend Analysis</h3>
+            <p>The system analyzes price action across multiple timeframes (1H, 15M) to identify the dominant market trend. Trades are only executed in the direction of the higher timeframe trend, significantly improving win rate.</p>
+
+            <h2>Strategy Details</h2>
+            
+            <h3>QuantumTrader Pro</h3>
+            <p>This premium strategy combines Bollinger Band breakouts with RSI divergence and ATR-based position sizing. It implements a modified martingale system that increases position size after losses but resets to baseline after wins. The strategy performs best in trending markets with clear support/resistance levels.</p>
+            
+            <div class="code-container">
+                <pre><code>
+// QuantumTrader Pro Logic:
+1. Calculate Bollinger Bands (20,2)
+2. Monitor RSI (14-period)
+3. Enter LONG when:
+   - Price touches lower band
+   - RSI < 30
+   - ATR > threshold
+4. Enter SHORT when:
+   - Price touches upper band
+   - RSI > 70
+   - ATR > threshold
+5. Adjust position size based on:
+   - Account balance
+   - Current streak
+   - Volatility
+                </code></pre>
+            </div>
+            
+            <h3>EliteTrader Pro</h3>
+            <p>This trend-following system uses EMA crossovers on multiple timeframes to identify high-probability trends. It implements a dynamic grid system where subsequent positions are added at predefined intervals in the direction of the trend, with automatic profit-taking at resistance levels.</p>
+            
+            <h3>GridMaster Lite</h3>
+            <p>A simplified version of grid trading that places buy and sell orders at fixed intervals above and below the current price. The system automatically adjusts grid spacing based on current volatility (ATR) and includes stop-loss protection on the entire grid.</p>
+
+            <button class="action-btn" onclick="window.location.href='../index.html'">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </button>
+        </div>
+    </div>
+</body>
+</html>

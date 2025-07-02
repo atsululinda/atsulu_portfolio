@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News Automation | Dennis Maran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-blue: #0a0a0f;
+            --light-blue: #ff8fab;
+            --glow-blue: #ff6b9d;
+            --accent-blue: #a855f7;
+            --glass-bg: rgba(20, 15, 25, 0.7);
+            --glass-border: rgba(255, 107, 157, 0.3);
+            --success-green: #bbf7d0;
+            --warning-orange: #facc15;
+        }
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+    
+        body {
+            background-color: var(--dark-blue);
+            color: var(--light-blue);
+            min-height: 100vh;
+            padding: 30px;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(255, 107, 157, 0.08), transparent 25%),
+                radial-gradient(circle at 80% 65%, rgba(168, 85, 247, 0.08), transparent 35%);
+            font-family: 'Roboto', sans-serif;
+        }
+    
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    
+        .project-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+    
+        h1 {
+            color: var(--glow-blue);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+            font-size: 2.5rem;
+        }
+    
+        h2 {
+            color: var(--accent-blue);
+            margin: 25px 0 15px;
+            font-size: 1.8rem;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+            padding-bottom: 10px;
+        }
+    
+        h3 {
+            color: var(--light-blue);
+            margin: 20px 0 10px;
+            font-size: 1.4rem;
+        }
+    
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+    
+        .code-container {
+            background: rgba(20, 15, 25, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            overflow-x: auto;
+        }
+    
+        pre {
+            color: var(--glow-blue);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+    
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+    
+        .tech-tag {
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--glow-blue);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 0.5px;
+        }
+    
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(to right, var(--accent-blue), var(--glow-blue));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+        }
+    
+        .action-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+            transform: translateY(-3px);
+        }
+    
+        .action-btn i {
+            margin-right: 10px;
+        }
+    
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+    
+        .spinner {
+            border: 5px solid rgba(255, 107, 157, 0.2);
+            border-radius: 50%;
+            border-top: 5px solid var(--glow-blue);
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    
+        .news-preview {
+            display: none;
+            background: rgba(20, 15, 25, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    
+        .news-preview h3 {
+            color: var(--glow-blue);
+            margin-bottom: 15px;
+        }
+    
+        .news-preview p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+    
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+    
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+    
+            .project-panel {
+                padding: 20px;
+            }
+    
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    
+        .news-article {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: 30px auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+    
+        .news-article h1 {
+            color: #222;
+            text-shadow: none;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+    
+        .news-article .byline {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+    
+        .news-article .content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+    
+        .news-article .content p {
+            margin-bottom: 20px;
+            color: #333;
+        }
+    
+        .news-article .content p:first-of-type::first-letter {
+            font-size: 3.5rem;
+            float: left;
+            line-height: 0.8;
+            margin-right: 10px;
+            color: var(--accent-blue);
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+        }
+    
+        .news-article .subheading {
+            color: var(--accent-blue);
+            margin: 30px 0 15px;
+            font-size: 1.5rem;
+        }
+    
+        .news-article .summary {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-left: 4px solid var(--accent-blue);
+            margin: 30px 0;
+        }
+    
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--light-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+    
+        .back-btn:hover {
+            color: var(--glow-blue);
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="project-panel">
+            <h1>AI News Automation System</h1>
+            <p>I developed an advanced AI-powered news generation system that creates professional, magazine-style articles about Kenya with automated content generation, image selection, and layout design.</p>
+            
+            <div class="tech-stack">
+                <span class="tech-tag">OpenRouter API</span>
+                <span class="tech-tag">DeepSeek AI</span>
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">HTML/CSS</span>
+                <span class="tech-tag">Automation</span>
+            </div>
+
+            <h2>System Features</h2>
+            <ul>
+                <li><strong>Dynamic Content Generation:</strong> Creates unique, well-researched articles on various Kenya-related topics</li>
+                <li><strong>Professional Layout:</strong> Formats content in a magazine-style with proper typography and spacing</li>
+                <li><strong>Multi-source Integration:</strong> Pulls from predefined content libraries and AI generation</li>
+                <li><strong>Responsive Design:</strong> Works perfectly on both desktop and mobile devices</li>
+            </ul>
+
+            <h2>Try It Out</h2>
+            <p>Click the button below to generate a sample Kenya news article. The system will use AI to create professional content with proper formatting.</p>
+            
+            <button id="generateNewsBtn" class="action-btn">
+                <i class="fas fa-newspaper"></i> Generate Kenya News Article
+            </button>
+
+            <div id="loadingIndicator" class="loading">
+                <div class="spinner"></div>
+                <p>Generating professional news article...</p>
+            </div>
+
+            <div id="newsPreview" class="news-preview">
+                <h3>Your News Article is Ready!</h3>
+                <div class="news-meta">
+                    <span id="newsDate"></span>
+                    <span id="newsReporter"></span>
+                </div>
+                <h2 id="newsHeadline"></h2>
+                <p id="newsExcerpt"></p>
+                <button id="viewFullArticleBtn" class="action-btn">
+                    <i class="fas fa-book-open"></i> View Full Article
+                </button>
+            </div>
+            
+            <h2>Technical Implementation</h2>
+            <div class="code-container">
+                <pre><code>
+// Core News Generation Function
+async function generateKenyaNews() {
+    // Select a random Kenya-related topic
+    const topics = [
+        "Kenya politics", "Kenya economy", "Kenya tourism", 
+        "Kenya wildlife", "Kenya technology", "Kenya sports"
+    ];
+    const topic = topics[Math.floor(Math.random() * topics.length)];
+    
+    // Generate content using OpenRouter API
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`
+        },
+        body: JSON.stringify({
+            model: "deepseek/deepseek-chat",
+            messages: [{
+                role: "user",
+                content: `Generate a professional 500-word news article about ${topic} in Kenya. 
+                Include a headline, byline, 3 subheadings, and a summary. 
+                Format with **bold** for headlines and "Subheading:" for subheadings.`
+            }]
+        })
+    });
+    
+    const data = await response.json();
+    return processNewsContent(data.choices[0].message.content);
+}
+
+// Process raw AI content into structured format
+function processNewsContent(content) {
+    // Extract headline
+    const headlineMatch = content.match(/\*\*(.*?)\*\*/);
+    const headline = headlineMatch ? headlineMatch[1] : "Kenya News Update";
+    
+    // Process content with proper formatting
+    let processed = content
+        .replace(/\*\*(.*?)\*\*/g, '&lt;strong&gt;$1&lt;/strong&gt;')
+        .replace(/Subheading: (.*?)(\n|$)/g, '&lt;h3 class="subheading"&gt;$1&lt;/h3&gt;')
+        .replace(/Summary: (.*?)(\n|$)/g, '&lt;div class="summary"&gt;$1&lt;/div&gt;')
+        .replace(/\n/g, '&lt;br&gt;&lt;br&gt;');
+    
+    return { headline, content: processed };
+}
+                </code></pre>
+            </div>
+
+            <button class="action-btn" onclick="window.location.href='../index.html'">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </button>
+        </div>
+    </div>
+
+    <!-- Hidden div for full article display -->
+    <div id="fullArticleContainer" style="display: none;">
+        <div class="container">
+            <div class="news-article">
+                <h1 id="fullArticleHeadline"></h1>
+                <div class="byline" id="fullArticleByline"></div>
+                <div class="content" id="fullArticleContent"></div>
+                <a href="#" class="back-btn" id="backToGeneratorBtn">
+                    <i class="fas fa-arrow-left"></i> Back to Generator
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const OPENROUTER_API_KEY = "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";
+        
+        // DOM Elements
+        const generateBtn = document.getElementById('generateNewsBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const newsPreview = document.getElementById('newsPreview');
+        const newsHeadline = document.getElementById('newsHeadline');
+        const newsExcerpt = document.getElementById('newsExcerpt');
+        const newsDate = document.getElementById('newsDate');
+        const newsReporter = document.getElementById('newsReporter');
+        const viewFullArticleBtn = document.getElementById('viewFullArticleBtn');
+        const fullArticleContainer = document.getElementById('fullArticleContainer');
+        const fullArticleHeadline = document.getElementById('fullArticleHeadline');
+        const fullArticleByline = document.getElementById('fullArticleByline');
+        const fullArticleContent = document.getElementById('fullArticleContent');
+        const backToGeneratorBtn = document.getElementById('backToGeneratorBtn');
+        
+        // Reporter names for byline
+        const reporterNames = [
+            "John Mwangi", "Sarah Otieno", "Daniel Kariuki", 
+            "Lucy Wanjiru", "Michael Odhiambo", "Elizabeth Nyawira"
+        ];
+        
+        // Generate news article
+        generateBtn.addEventListener('click', async () => {
+            // Show loading indicator
+            generateBtn.disabled = true;
+            loadingIndicator.style.display = 'block';
+            newsPreview.style.display = 'none';
+            
+            try {
+                // Generate news content
+                const newsData = await generateKenyaNews();
+                
+                // Get current date
+                const now = new Date();
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                const currentDate = now.toLocaleDateString('en-US', options);
+                
+                // Select random reporter
+                const reporter = reporterNames[Math.floor(Math.random() * reporterNames.length)];
+                
+                // Update preview
+                newsHeadline.textContent = newsData.headline;
+                newsExcerpt.textContent = newsData.content.substring(0, 200) + '...';
+                newsDate.textContent = currentDate;
+                newsReporter.textContent = `By ${reporter}, Nairobi`;
+                
+                // Store full article data
+                newsPreview.dataset.fullContent = newsData.content;
+                newsPreview.dataset.byline = `By ${reporter}, Nairobi | ${currentDate}`;
+                
+                // Show preview
+                loadingIndicator.style.display = 'none';
+                newsPreview.style.display = 'block';
+            } catch (error) {
+                console.error('Error generating news:', error);
+                alert('Failed to generate news. Please check console for details.');
+                loadingIndicator.style.display = 'none';
+            } finally {
+                generateBtn.disabled = false;
+            }
+        });
+        
+        // View full article
+        viewFullArticleBtn.addEventListener('click', () => {
+            // Hide main container and show article
+            document.querySelector('.container').style.display = 'none';
+            fullArticleContainer.style.display = 'block';
+            
+            // Populate full article
+            fullArticleHeadline.textContent = newsHeadline.textContent;
+            fullArticleByline.textContent = newsPreview.dataset.byline;
+            fullArticleContent.innerHTML = newsPreview.dataset.fullContent;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        });
+        
+        // Back to generator
+        backToGeneratorBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            fullArticleContainer.style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+        });
+        
+        // Generate Kenya news using OpenRouter API
+        async function generateKenyaNews() {
+            // Select a random Kenya-related topic
+            const topics = [
+                "Kenya politics", "Kenya economy", "Kenya tourism", 
+                "Kenya wildlife conservation", "Kenya technology startups", 
+                "Kenya sports achievements", "Kenya cultural events",
+                "Kenya education reforms", "Kenya infrastructure development",
+                "Kenya agricultural innovations"
+            ];
+            const topic = topics[Math.floor(Math.random() * topics.length)];
+            
+            // Current date for context
+            const now = new Date();
+            const currentDate = now.toLocaleDateString('en-US', { 
+                year: 'numeric', month: 'long', day: 'numeric' 
+            });
+            
+            // Prepare the prompt for the AI
+            const prompt = `Generate a detailed, magazine-style news article about ${topic} in Kenya as of ${currentDate}.
+            
+            Requirements:
+            1. Start with a catchy headline wrapped in **double asterisks**
+            2. Include a byline with "By [Reporter Name], Nairobi, Kenya | ${currentDate}"
+            3. Include 3 subheadings prefixed with "Subheading:"
+            4. Write 5-7 paragraphs with specific details, names, and statistics
+            5. Include 2-3 quotes from relevant experts or officials
+            6. End with a summary paragraph prefixed with "Summary:"
+            
+            Make it professional, factual, and engaging like a high-quality news magazine.`;
+            
+            try {
+                // Make API request to OpenRouter
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                        'HTTP-Referer': 'https://localhost',  // Required by OpenRouter
+                        'X-Title': 'Kenya News Generator'      // Optional but good practice
+                    },
+                    body: JSON.stringify({
+                        "model": "deepseek/deepseek-chat",  // Using DeepSeek model
+                        "messages": [
+                            {"role": "user", "content": prompt}
+                        ],
+                        "max_tokens": 1500
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error?.message || 'Failed to generate content');
+                }
+                
+                const content = data.choices[0].message.content;
+                return processNewsContent(content);
+                
+            } catch (error) {
+                console.error('API Error:', error);
+                // Fallback to local generated content if API fails
+                return getFallbackContent(topic, currentDate);
+            }
+        }
+        
+        // Process the raw news content into structured format
+        function processNewsContent(content) {
+            // Extract headline
+            const headlineMatch = content.match(/\*\*(.*?)\*\*/);
+            const headline = headlineMatch ? headlineMatch[1] : "Kenya News Update";
+            
+            // Convert to HTML
+            let htmlContent = content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Bold for emphasis
+                .replace(/Subheading: (.*?)(\n|$)/g, '<h3 class="subheading">$1</h3>')  // Subheadings
+                .replace(/Summary: (.*?)(\n|$)/g, '<div class="summary">$1</div>')  // Summary box
+                .replace(/\n\n/g, '</p><p>')  // Paragraphs
+                .replace(/\n/g, '<br>');  // Line breaks
+            
+            // Ensure proper paragraph wrapping
+            htmlContent = `<p>${htmlContent}</p>`;
+            
+            return { 
+                headline, 
+                content: htmlContent 
+            };
+        }
+        
+        // Fallback content if API fails
+        function getFallbackContent(topic, date) {
+            const fallbackArticles = {
+                "Kenya politics": {
+                    headline: "Kenyan Parliament Passes New Economic Reform Bill",
+                    content: `<p><strong>NAIROBI</strong> - In a landmark session yesterday, the Kenyan Parliament approved the controversial Economic Reform Bill with a 65% majority vote. The legislation aims to streamline business regulations and attract foreign investment.</p>
+                    <h3 class="subheading">Historic Decision</h3>
+                    <p>The bill, which had been in discussion for over 18 months, finally passed after intense debate. "This is a pivotal moment for Kenya's economic future," stated Finance Minister David Ndii during the post-vote press conference.</p>
+                    <h3 class="subheading">Key Provisions</h3>
+                    <p>The legislation includes tax incentives for tech startups, reduced bureaucracy for small businesses, and special economic zones in Mombasa and Kisumu. Experts predict these changes could increase GDP growth by 1.5% annually.</p>
+                    <h3 class="subheading">Opposition Concerns</h3>
+                    <p>Despite the majority support, some opposition members expressed concerns about potential short-term job losses in regulated sectors. "We must ensure these reforms don't leave ordinary Kenyans behind," cautioned opposition leader Raila Odinga.</p>
+                    <div class="summary">The Economic Reform Bill represents Kenya's most significant economic policy shift in a decade, with potential to dramatically reshape the country's business landscape and international competitiveness.</div>`
+                },
+                "Kenya wildlife conservation": {
+                    headline: "Record Number of Elephant Births Reported in Amboseli",
+                    content: `<p><strong>AMBOSELI NATIONAL PARK</strong> - Conservationists are celebrating after documenting 42 elephant calves born this season in Amboseli, the highest number in 15 years of monitoring.</p>
+                    <h3 class="subheading">Conservation Success</h3>
+                    <p>"This baby boom is direct evidence that our anti-poaching efforts are working," said Dr. Cynthia Moss, director of the Amboseli Elephant Research Project. The population now stands at over 1,600 elephants in the ecosystem.</p>
+                    <h3 class="subheading">Community Involvement</h3>
+                    <p>Local Maasai communities have played a crucial role in conservation through community ranger programs. "The elephants are our heritage and our livelihood through tourism," explained community leader Joseph Tipatet.</p>
+                    <h3 class="subheading">Climate Challenges</h3>
+                    <p>Despite the good news, researchers warn that prolonged droughts threaten these gains. "We need sustainable water management to protect this progress," noted Kenya Wildlife Service director John Waweru.</p>
+                    <div class="summary">Amboseli's elephant population rebound demonstrates the effectiveness of combined anti-poaching measures and community engagement, though climate change remains a significant threat to long-term conservation efforts.</div>`
+                },
+                "Kenya technology startups": {
+                    headline: "Nairobi Ranked Among Africa's Top Tech Hubs in New Report",
+                    content: `<p><strong>NAIROBI</strong> - A newly released GSMA report positions Nairobi as the third most vibrant tech startup ecosystem in Africa, trailing only Lagos and Cape Town.</p>
+                    <h3 class="subheading">Silicon Savannah Growth</h3>
+                    <p>The "Silicon Savannah" saw a 28% increase in tech startup funding last year, with fintech companies leading the charge. "Kenya's mobile money infrastructure gives us a unique advantage," said Twiga Foods CEO Peter Njonjo.</p>
+                    <h3 class="subheading">Investment Trends</h3>
+                    <p>According to the report, Kenyan startups raised $320 million in 2023, with 60% going to fintech solutions. Notable deals included $50 million for agri-tech platform Apollo Agriculture.</p>
+                    <h3 class="subheading">Talent Development</h3>
+                    <p>Andela Kenya reported training 1,200 software developers last year, while Moringa School expanded its programs to Nakuru and Mombasa. "We're building the workforce for Africa's digital future," said Moringa's managing director Snehar Shah.</p>
+                    <div class="summary">Nairobi's continued rise as a tech innovation hub reflects Kenya's growing reputation as a center for African digital transformation, though challenges remain in scaling startups beyond early stages.</div>`
+                }
+            };
+            
+            // Find the best matching fallback article
+            let bestMatch = {
+                headline: "Kenya News Update",
+                content: "<p>Latest developments from across Kenya.</p>"
+            };
+            
+            for (const key in fallbackArticles) {
+                if (topic.toLowerCase().includes(key.toLowerCase().replace("kenya ", ""))) {
+                    bestMatch = fallbackArticles[key];
+                    break;
+                }
+            }
+            
+            return bestMatch;
+        }
+    </script>
+</body>
+</html>
