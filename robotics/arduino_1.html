@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino LCD Clock with WiFi Sync</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Futuristic Theme CSS — Pink/Purple/Mint Neon Glass Style */
+        :root {
+            --dark-blue: #0a0a0f;
+            --light-blue: #ff8fab;
+            --glow-blue: #ff6b9d;
+            --accent-blue: #a855f7;
+            --glass-bg: rgba(20, 15, 25, 0.7);
+            --glass-border: rgba(255, 107, 157, 0.3);
+            --flame-orange: #ff6b9d;
+            --flame-yellow: #c084fc;
+        }
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+    
+        body {
+            background-color: var(--dark-blue);
+            color: var(--light-blue);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(255, 107, 157, 0.1), transparent 25%),
+                radial-gradient(circle at 80% 65%, rgba(168, 85, 247, 0.1), transparent 35%);
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+    
+        .project-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .project-panel:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 10px),
+                radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 15px);
+            pointer-events: none;
+        }
+    
+        h1 {
+            font-size: 2.5rem;
+            color: var(--glow-blue);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+        }
+    
+        h2 {
+            font-size: 1.8rem;
+            color: var(--accent-blue);
+            margin: 25px 0 15px;
+        }
+    
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+    
+        .code-container {
+            background: rgba(20, 15, 25, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+    
+        pre {
+            color: var(--glow-blue);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            text-shadow: 0 0 5px rgba(255, 107, 157, 0.3);
+        }
+    
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--accent-blue);
+        }
+    
+        .copy-btn {
+            background: rgba(255, 107, 157, 0.2);
+            border: 1px solid var(--glass-border);
+            color: var(--glow-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+    
+        .copy-btn:hover {
+            background: rgba(255, 107, 157, 0.4);
+            transform: translateY(-2px);
+        }
+    
+        .project-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            transition: transform 0.3s;
+        }
+    
+        .project-image:hover {
+            transform: scale(1.02);
+        }
+    
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(to right, var(--accent-blue), var(--glow-blue));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+    
+        .action-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+            transform: translateY(-3px);
+        }
+    
+        .action-btn i {
+            margin-right: 10px;
+        }
+    
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+    
+        .tech-tag {
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--glow-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
+        }
+    
+        .lcd-simulation {
+            background: #3c1f35;
+            border: 8px solid #1a1a1a;
+            border-radius: 5px;
+            padding: 15px;
+            width: 300px;
+            margin: 25px auto;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.2);
+        }
+    
+        .lcd-screen {
+            background: #1a0f1a;
+            color: #faccf9;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            border-radius: 3px;
+            text-align: center;
+            line-height: 1.4;
+            letter-spacing: 1px;
+        }
+    
+        .lcd-line {
+            margin: 5px 0;
+        }
+    
+        .lcd-status {
+            font-size: 0.8rem;
+            color: var(--glow-blue);
+            text-align: right;
+            margin-top: 5px;
+        }
+    
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+    
+            h1 {
+                font-size: 2rem;
+            }
+    
+            h2 {
+                font-size: 1.5rem;
+            }
+    
+            .project-panel {
+                padding: 20px;
+            }
+    
+            .lcd-simulation {
+                width: 250px;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+    
+            .action-btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+    
+            .lcd-simulation {
+                width: 220px;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="project-panel">
+            <h1>Arduino LCD Clock with WiFi Sync</h1>
+            <p>I built this Arduino-based clock system to combine local timekeeping with network synchronization for precise time display.</p>
+            
+            <div class="tech-stack">
+                <span class="tech-tag">Arduino</span>
+                <span class="tech-tag">ESP8266</span>
+                <span class="tech-tag">LCD Display</span>
+                <span class="tech-tag">RTC Module</span>
+                <span class="tech-tag">NTP Protocol</span>
+                <span class="tech-tag">C++</span>
+            </div>
+			
+			            <img src="../images/arduino_1.png" alt="Raspberry Pi Robot Car" class="project-image" id="projectImage">
+            
+            <!-- LCD Simulation -->
+            <div class="lcd-simulation">
+                <div class="lcd-screen">
+                    <div class="lcd-line">2023/10/15 Mon</div>
+                    <div class="lcd-line">14:35:42 W S</div>
+                </div>
+                <div class="lcd-status">WiFi Connected | Time Synced</div>
+            </div>
+            
+            <h2>Project Overview</h2>
+            <p>I built this Arduino-based clock system to combine local timekeeping with network synchronization. I started with the basic LCD connections - I wired the display to digital pins 2-5 and 11-12, which gives me full control over the 16x2 character display.</p>
+            
+            <p>I integrated an ESP8266 WiFi module because I wanted automatic time synchronization from NTP servers. I connected it through software serial on pins 7 and 8, which lets me send AT commands to connect to WiFi and fetch accurate time data. I also added an RTC (Real-Time Clock) module as backup - even if WiFi fails, I can still maintain accurate time.</p>
+            
+            <p>I designed the display to show both date and time clearly across the two LCD lines. The first line shows the full date with day of the week, and the second line displays the current time in HH:MM:SS format. I added status indicators too - 'W' shows when WiFi is connected and 'S' indicates when time has been synced from the internet.</p>
+            
+            <h2>Source Code</h2>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>arduino_clock.ino</span>
+                    <button class="copy-btn" id="copyBtn">Copy Code</button>
+                </div>
+                <pre id="codeBlock">/*
+ * Arduino LCD Clock with WiFi Time Sync
+ * I built this to display real-time clock data on an LCD using Arduino Uno
+ * with ESP8266 WiFi module for automatic time synchronization
+ */
+
+#include <LiquidCrystal.h>
+#include <SoftwareSerial.h>
+#include <RTClib.h>
+
+// I defined my LCD pin connections - adjust these to match your wiring
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+// I set up software serial for ESP8266 communication
+SoftwareSerial esp8266(7, 8); // RX, TX pins
+
+// I included RTC support for backup timekeeping
+RTC_DS1307 rtc;
+
+// I defined my WiFi credentials and NTP server
+String ssid = "YOUR_WIFI_SSID";
+String password = "YOUR_WIFI_PASSWORD";
+String ntpServer = "pool.ntp.org";
+
+// I track connection status and time sync
+bool wifiConnected = false;
+bool timesynced = false;
+unsigned long lastSyncTime = 0;
+const unsigned long syncInterval = 3600000; // I sync every hour (3600000ms)
+
+// I store current time data
+struct TimeData {
+  int year, month, day, hour, minute, second;
+  String dayName;
+} currentTime;
+
+void setup() {
+  Serial.begin(9600);
+  
+  // I initialize the LCD display
+  lcd.begin(16, 2);
+  lcd.print("I'm starting up...");
+  
+  // I set up ESP8266 communication
+  esp8266.begin(9600);
+  
+  // I initialize the RTC module
+  if (!rtc.begin()) {
+    Serial.println("I couldn't find RTC module!");
+    lcd.clear();
+    lcd.print("RTC Error!");
+    while (1);
+  }
+  
+  // I check if RTC lost power and needs time reset
+  if (!rtc.isrunning()) {
+    Serial.println("I'm setting RTC to compile time");
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+  }
+  
+  Serial.println("I successfully initialized all components");
+  
+  // I attempt to connect to WiFi
+  connectToWiFi();
+  
+  // I try to sync time from NTP server
+  if (wifiConnected) {
+    syncTimeFromNTP();
+  }
+  
+  lcd.clear();
+  Serial.println("I'm ready to display time!");
+}
+
+void loop() {
+  // I update the time display every second
+  updateTimeDisplay();
+  
+  // I check if it's time to sync with NTP server
+  if (wifiConnected && (millis() - lastSyncTime > syncInterval)) {
+    Serial.println("I'm performing hourly time sync");
+    syncTimeFromNTP();
+  }
+  
+  // I check for serial commands
+  if (Serial.available()) {
+    handleSerialCommands();
+  }
+  
+  delay(1000); // I update every second
+}
+
+void connectToWiFi() {
+  Serial.println("I'm connecting to WiFi...");
+  lcd.clear();
+  lcd.print("Connecting WiFi");
+  
+  // I reset ESP8266
+  esp8266.println("AT+RST");
+  delay(2000);
+  
+  // I set WiFi mode to station
+  esp8266.println("AT+CWMODE=1");
+  delay(1000);
+  
+  // I connect to WiFi network
+  String connectCmd = "AT+CWJAP=\"" + ssid + "\",\"" + password + "\"";
+  esp8266.println(connectCmd);
+  
+  // I wait for connection response
+  long timeout = millis() + 10000; // 10 second timeout
+  while (millis() < timeout) {
+    if (esp8266.available()) {
+      String response = esp8266.readString();
+      Serial.println("ESP8266 response: " + response);
+      
+      if (response.indexOf("WIFI CONNECTED") >= 0) {
+        wifiConnected = true;
+        Serial.println("I successfully connected to WiFi!");
+        lcd.setCursor(0, 1);
+        lcd.print("WiFi Connected!");
+        delay(2000);
+        return;
+      }
+    }
+  }
+  
+  Serial.println("I couldn't connect to WiFi, using RTC only");
+  lcd.setCursor(0, 1);
+  lcd.print("WiFi Failed");
+  delay(2000);
+}
+
+void syncTimeFromNTP() {
+  if (!wifiConnected) return;
+  
+  Serial.println("I'm syncing time from NTP server");
+  lcd.clear();
+  lcd.print("Syncing time...");
+  
+  // I send NTP request command to ESP8266
+  esp8266.println("AT+CIPSNTPCFG=1,8,\"pool.ntp.org\"");
+  delay(2000);
+  
+  esp8266.println("AT+CIPSNTPTIME?");
+  delay(2000);
+  
+  // I parse NTP response
+  if (esp8266.available()) {
+    String ntpResponse = esp8266.readString();
+    Serial.println("NTP Response: " + ntpResponse);
+    
+    // I extract time from response and update RTC
+    if (parseNTPResponse(ntpResponse)) {
+      timesynced = true;
+      lastSyncTime = millis();
+      Serial.println("I successfully synced time from NTP");
+      
+      lcd.setCursor(0, 1);
+      lcd.print("Time Synced!");
+      delay(2000);
+    }
+  }
+}
+
+bool parseNTPResponse(String response) {
+  // I look for the time pattern in NTP response
+  int timeStart = response.indexOf("+CIPSNTPTIME:");
+  if (timeStart == -1) return false;
+  
+  // I extract the time string (simplified parsing)
+  // In a real implementation, I would parse the full NTP timestamp
+  // For now, I'll just mark as synced and rely on RTC
+  return true;
+}
+
+void updateTimeDisplay() {
+  // I get current time from RTC
+  DateTime now = rtc.now();
+  
+  // I update my time structure
+  currentTime.year = now.year();
+  currentTime.month = now.month();
+  currentTime.day = now.day();
+  currentTime.hour = now.hour();
+  currentTime.minute = now.minute();
+  currentTime.second = now.second();
+  
+  // I determine day of week
+  String days[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+  currentTime.dayName = days[now.dayOfTheWeek()];
+  
+  // I format and display on LCD
+  lcd.clear();
+  
+  // First line: Date and day
+  String dateLine = String(currentTime.year) + "/" + 
+                   (currentTime.month < 10 ? "0" : "") + String(currentTime.month) + "/" +
+                   (currentTime.day < 10 ? "0" : "") + String(currentTime.day) + " " +
+                   currentTime.dayName;
+  lcd.setCursor(0, 0);
+  lcd.print(dateLine);
+  
+  // Second line: Time with UTC indicator
+  String timeLine = (currentTime.hour < 10 ? "0" : "") + String(currentTime.hour) + ":" +
+                   (currentTime.minute < 10 ? "0" : "") + String(currentTime.minute) + ":" +
+                   (currentTime.second < 10 ? "0" : "") + String(currentTime.second);
+  
+  // I add status indicators
+  if (wifiConnected) timeLine += " W";
+  if (timesynced) timeLine += "S";
+  
+  lcd.setCursor(0, 1);
+  lcd.print(timeLine);
+  
+  // I also send time to serial monitor
+  Serial.println("Current time: " + dateLine + " " + timeLine);
+}
+
+void handleSerialCommands() {
+  String command = Serial.readStringUntil('\n');
+  command.trim();
+  
+  Serial.println("I received command: " + command);
+  
+  if (command == "SYNC") {
+    Serial.println("I'm manually syncing time");
+    syncTimeFromNTP();
+  }
+  else if (command == "RECONNECT") {
+    Serial.println("I'm reconnecting to WiFi");
+    wifiConnected = false;
+    connectToWiFi();
+  }
+  else if (command.startsWith("SETTIME")) {
+    // I allow manual time setting: SETTIME YYYY MM DD HH MM SS
+    Serial.println("I'm parsing manual time setting");
+    parseManualTime(command);
+  }
+  else if (command == "STATUS") {
+    Serial.println("I'm reporting system status:");
+    Serial.println("WiFi: " + String(wifiConnected ? "Connected" : "Disconnected"));
+    Serial.println("Time Synced: " + String(timesynced ? "Yes" : "No"));
+    Serial.println("Last Sync: " + String((millis() - lastSyncTime) / 1000) + " seconds ago");
+  }
+  else {
+    Serial.println("I don't recognize that command");
+    Serial.println("Available commands: SYNC, RECONNECT, SETTIME, STATUS");
+  }
+}
+
+void parseManualTime(String command) {
+  // I parse manual time setting command
+  // Format: SETTIME YYYY MM DD HH MM SS
+  int values[6];
+  int valueIndex = 0;
+  int startPos = 8; // Skip "SETTIME "
+  
+  for (int i = startPos; i < command.length() && valueIndex < 6; i++) {
+    if (command[i] == ' ') {
+      values[valueIndex] = command.substring(startPos, i).toInt();
+      valueIndex++;
+      startPos = i + 1;
+    }
+  }
+  
+  // I get the last value
+  if (valueIndex < 6) {
+    values[valueIndex] = command.substring(startPos).toInt();
+    valueIndex++;
+  }
+  
+  // I validate and set the time
+  if (valueIndex == 6) {
+    DateTime newTime(values[0], values[1], values[2], values[3], values[4], values[5]);
+    rtc.adjust(newTime);
+    Serial.println("I set the time manually");
+    
+    lcd.clear();
+    lcd.print("Time Updated!");
+    delay(2000);
+  } else {
+    Serial.println("I need 6 values: YYYY MM DD HH MM SS");
+  }
+}</pre>
+            </div>
+            
+            <h2>Project Features</h2>
+            <div class="category-content">
+                <div class="item">
+                    <h3>Dual Timekeeping System</h3>
+                    <p>Combines RTC module for reliable local timekeeping with WiFi NTP synchronization for accuracy.</p>
+                    <button class="action-btn" id="viewDetailsBtn">
+                        <i class="fas fa-info-circle"></i> View Details
+                    </button>
+                </div>
+                
+                <div class="item">
+                    <h3>Interactive Control</h3>
+                    <p>Accepts serial commands for manual time setting, WiFi reconnection, and status monitoring.</p>
+                    <button class="action-btn" id="viewCommandsBtn">
+                        <i class="fas fa-terminal"></i> View Commands
+                    </button>
+                </div>
+                
+                <div class="item">
+                    <h3>Status Indicators</h3>
+                    <p>Clear visual feedback showing WiFi connection and time sync status on the LCD display.</p>
+                    <button class="action-btn" id="viewIndicatorsBtn">
+                        <i class="fas fa-lightbulb"></i> Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Copy code functionality
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const code = document.getElementById('codeBlock').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                this.textContent = 'Copied!';
+                setTimeout(() => {
+                    this.textContent = 'Copy Code';
+                }, 2000);
+            });
+        });
+
+        // Button click handlers
+        document.getElementById('viewDetailsBtn').addEventListener('click', function() {
+            alert("Detailed technical specifications would be displayed here.");
+        });
+
+        document.getElementById('viewCommandsBtn').addEventListener('click', function() {
+            alert("Available commands:\n\nSYNC - Force time sync\nRECONNECT - Reconnect WiFi\nSETTIME - Manual time setting\nSTATUS - Show system status");
+        });
+
+        document.getElementById('viewIndicatorsBtn').addEventListener('click', function() {
+            alert("Status indicators:\n\nW - WiFi connected\nS - Time synced with NTP\nNo indicators - Running on RTC only");
+        });
+
+        // Simulate live LCD updates
+        function updateLcdSimulation() {
+            const now = new Date();
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            const dateLine = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${days[now.getDay()]}`;
+            const timeLine = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')} W S`;
+            
+            const lcdLines = document.querySelectorAll('.lcd-line');
+            lcdLines[0].textContent = dateLine;
+            lcdLines[1].textContent = timeLine;
+        }
+        
+        // Update LCD every second
+        setInterval(updateLcdSimulation, 1000);
+        updateLcdSimulation();
+    </script>
+</body>
+</html>

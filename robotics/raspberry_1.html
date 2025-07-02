@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raspberry Pi Robot Project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Futuristic Theme CSS — adjusted to match pink/purple/mint style */
+        :root {
+            --dark-blue: #0a0a0f; /* Background dark */
+            --light-blue: #ff8fab; /* Primary text */
+            --glow-blue: #ff6b9d;  /* Glowing elements */
+            --accent-blue: #a855f7; /* Accent color */
+            --glass-bg: rgba(20, 15, 25, 0.7);
+            --glass-border: rgba(255, 107, 157, 0.3);
+            --flame-orange: #ff6b9d;
+            --flame-yellow: #c084fc;
+        }
+    
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+        }
+    
+        body {
+            background-color: var(--dark-blue);
+            color: var(--light-blue);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 35%, rgba(255, 107, 157, 0.1), transparent 25%),
+                radial-gradient(circle at 80% 65%, rgba(168, 85, 247, 0.1), transparent 35%);
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+    
+        /* Glass Panel Effect */
+        .project-panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .project-panel:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 10px),
+                radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 15px);
+            pointer-events: none;
+        }
+    
+        h1 {
+            font-size: 2.5rem;
+            color: var(--glow-blue);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 107, 157, 0.5);
+        }
+    
+        h2 {
+            font-size: 1.8rem;
+            color: var(--accent-blue);
+            margin: 25px 0 15px;
+        }
+    
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+    
+        /* Code Display */
+        .code-container {
+            background: rgba(20, 15, 25, 0.7);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+    
+        pre {
+            color: var(--glow-blue);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            text-shadow: 0 0 5px rgba(255, 107, 157, 0.3);
+        }
+    
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--accent-blue);
+        }
+    
+        .copy-btn {
+            background: rgba(255, 107, 157, 0.2);
+            border: 1px solid var(--glass-border);
+            color: var(--glow-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+    
+        .copy-btn:hover {
+            background: rgba(255, 107, 157, 0.4);
+            transform: translateY(-2px);
+        }
+    
+        /* Project Image */
+        .project-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            transition: transform 0.3s;
+        }
+    
+        .project-image:hover {
+            transform: scale(1.02);
+        }
+    
+        /* Button Styles */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(to right, var(--accent-blue), var(--glow-blue));
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+    
+        .action-btn:hover {
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+            transform: translateY(-3px);
+        }
+    
+        .action-btn i {
+            margin-right: 10px;
+        }
+    
+        /* Tech Stack Tags */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+    
+        .tech-tag {
+            background: rgba(255, 107, 157, 0.2);
+            color: var(--glow-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
+        }
+    
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+    
+            h1 {
+                font-size: 2rem;
+            }
+    
+            h2 {
+                font-size: 1.5rem;
+            }
+    
+            .project-panel {
+                padding: 20px;
+            }
+        }
+    
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+    
+            .action-btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="project-panel">
+            <h1>Raspberry Pi Robot Car</h1>
+            <p>I built this autonomous robot car using Raspberry Pi, featuring obstacle avoidance and manual control modes.</p>
+            
+            <div class="tech-stack">
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Raspberry Pi</span>
+                <span class="tech-tag">GPIO</span>
+                <span class="tech-tag">gpiozero</span>
+                <span class="tech-tag">Ultrasonic Sensor</span>
+                <span class="tech-tag">PWM Control</span>
+            </div>
+            
+            <img src="../images/raspberry_1.png" alt="Raspberry Pi Robot Car" class="project-image" id="projectImage">
+            
+            <h2>Project Overview</h2>
+            <p>I built this robot car control system step by step, starting with the basic motor connections to what looks like your L298N motor driver board. I wired the Raspberry Pi GPIO pins to control the motors through the driver board, which handles the higher current needed for the motors while protecting the Pi.</p>
+            
+            <p>I designed the code with both autonomous and manual control modes because I wanted flexibility in testing. In autonomous mode, I implemented obstacle avoidance using an ultrasonic sensor - when I detect something closer than 20cm, I back up and turn randomly to find a clear path. For manual control, I set up simple keyboard commands so I could test each movement individually.</p>
+            
+            <p>I used the gpiozero library because I found it much cleaner than controlling GPIO pins directly. I also added speed control functionality so I could adjust how fast the robot moves, which I found essential for indoor testing where full speed was often too fast.</p>
+            
+            <h2>Source Code</h2>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>robot_car.py</span>
+                    <button class="copy-btn" id="copyBtn">Copy Code</button>
+                </div>
+                <pre id="codeBlock">#!/usr/bin/env python3
+"""
+Raspberry Pi Robot Car Control
+I built this to control my wheeled robot using GPIO pins and PWM for motor speed control.
+"""
+
+import RPi.GPIO as GPIO
+import time
+from gpiozero import Robot, DistanceSensor
+import threading
+
+class RobotCar:
+    def __init__(self):
+        """
+        I initialized my robot car with motor pins and sensor connections.
+        I'm using GPIO pins that connect to my motor driver board (like L298N).
+        """
+        # Motor pins - I connected these to my motor driver board
+        self.left_motor_pins = (18, 19)   # Forward, Backward pins for left motor
+        self.right_motor_pins = (20, 21)  # Forward, Backward pins for right motor
+        
+        # I set up the robot using gpiozero for easier control
+        self.robot = Robot(left=self.left_motor_pins, right=self.right_motor_pins)
+        
+        # I added an ultrasonic sensor for obstacle detection
+        self.ultrasonic = DistanceSensor(echo=24, trigger=23)
+        
+        # I keep track of the robot's state
+        self.is_running = False
+        self.current_speed = 1.0  # I use full speed by default
+        
+        print("I successfully initialized my robot car!")
+    
+    def move_forward(self, duration=1.0):
+        """I move the robot forward for a specified duration"""
+        print(f"I'm moving forward for {duration} seconds")
+        self.robot.forward(speed=self.current_speed)
+        time.sleep(duration)
+        self.stop()
+    
+    def move_backward(self, duration=1.0):
+        """I move the robot backward for a specified duration"""
+        print(f"I'm moving backward for {duration} seconds")
+        self.robot.backward(speed=self.current_speed)
+        time.sleep(duration)
+        self.stop()
+    
+    def turn_left(self, duration=0.5):
+        """I turn the robot left by spinning the right wheel forward"""
+        print(f"I'm turning left for {duration} seconds")
+        self.robot.left(speed=self.current_speed)
+        time.sleep(duration)
+        self.stop()
+    
+    def turn_right(self, duration=0.5):
+        """I turn the robot right by spinning the left wheel forward"""
+        print(f"I'm turning right for {duration} seconds")
+        self.robot.right(speed=self.current_speed)
+        time.sleep(duration)
+        self.stop()
+    
+    def stop(self):
+        """I stop all motor movement"""
+        self.robot.stop()
+        print("I stopped the robot")
+    
+    def set_speed(self, speed):
+        """I adjust the motor speed (0.0 to 1.0)"""
+        self.current_speed = max(0.0, min(1.0, speed))
+        print(f"I set the speed to {self.current_speed}")
+    
+    def get_distance(self):
+        """I measure distance using the ultrasonic sensor"""
+        distance = self.ultrasonic.distance * 100  # Convert to cm
+        print(f"I measured distance: {distance:.1f} cm")
+        return distance
+    
+    def autonomous_drive(self):
+        """
+        I implemented autonomous driving with obstacle avoidance.
+        This runs in a loop until I stop it.
+        """
+        print("I started autonomous driving mode")
+        self.is_running = True
+        
+        try:
+            while self.is_running:
+                distance = self.get_distance()
+                
+                if distance > 20:  # I move forward if path is clear
+                    print("I see the path is clear, moving forward")
+                    self.robot.forward(speed=self.current_speed)
+                    time.sleep(0.1)
+                else:  # I avoid obstacles when they're too close
+                    print("I detected an obstacle, avoiding it")
+                    self.stop()
+                    time.sleep(0.2)
+                    
+                    # I back up a bit
+                    self.move_backward(0.5)
+                    
+                    # I randomly choose left or right turn
+                    import random
+                    if random.choice([True, False]):
+                        self.turn_left(1.0)
+                    else:
+                        self.turn_right(1.0)
+                    
+                    time.sleep(0.5)
+                    
+        except KeyboardInterrupt:
+            print("I received stop command")
+        finally:
+            self.stop()
+            self.is_running = False
+    
+    def manual_control(self):
+        """
+        I set up manual keyboard control for testing movements.
+        I use WASD keys for direction control.
+        """
+        print("I started manual control mode")
+        print("I'm waiting for commands: W=forward, S=backward, A=left, D=right, Q=quit")
+        
+        try:
+            while True:
+                command = input("I'm ready for your command: ").lower().strip()
+                
+                if command == 'w':
+                    self.move_forward(1.0)
+                elif command == 's':
+                    self.move_backward(1.0)
+                elif command == 'a':
+                    self.turn_left(0.5)
+                elif command == 'd':
+                    self.turn_right(0.5)
+                elif command == 'q':
+                    print("I'm exiting manual control")
+                    break
+                elif command.startswith('speed'):
+                    # I allow speed adjustment with "speed 0.5" command
+                    try:
+                        speed_value = float(command.split()[1])
+                        self.set_speed(speed_value)
+                    except:
+                        print("I need a valid speed value (0.0 to 1.0)")
+                else:
+                    print("I don't recognize that command")
+                    
+        except KeyboardInterrupt:
+            print("I received interrupt signal")
+        finally:
+            self.stop()
+    
+    def cleanup(self):
+        """I clean up GPIO pins when shutting down"""
+        print("I'm cleaning up GPIO pins")
+        self.robot.close()
+        GPIO.cleanup()
+
+def main():
+    """
+    I created the main function to demonstrate my robot car capabilities.
+    I can run either autonomous or manual mode.
+    """
+    print("I'm starting my Robot Car control system")
+    
+    # I create my robot car instance
+    car = RobotCar()
+    
+    try:
+        # I ask the user which mode they want
+        mode = input("I can run in 'auto' or 'manual' mode. Which do you prefer? ").lower()
+        
+        if mode == 'auto':
+            print("I'm starting autonomous mode")
+            car.autonomous_drive()
+        else:
+            print("I'm starting manual control mode")
+            car.manual_control()
+            
+    except Exception as e:
+        print(f"I encountered an error: {e}")
+    finally:
+        print("I'm shutting down the robot car")
+        car.cleanup()
+
+if __name__ == "__main__":
+    main()</pre>
+            </div>
+            
+            <h2>Project Features</h2>
+            <div class="category-content">
+                <div class="item">
+                    <h3>Dual Control Modes</h3>
+                    <p>Implemented both autonomous obstacle avoidance and manual keyboard control for flexible testing and operation.</p>
+                    <button class="action-btn" id="viewDemoBtn">
+                        <i class="fas fa-play"></i> View Demo
+                    </button>
+                </div>
+                
+                <div class="item">
+                    <h3>Precise Motor Control</h3>
+                    <p>Utilized PWM through gpiozero library for smooth speed control of DC motors via L298N driver.</p>
+                    <button class="action-btn" id="viewDetailsBtn">
+                        <i class="fas fa-info-circle"></i> Technical Details
+                    </button>
+                </div>
+                
+                <div class="item">
+                    <h3>Obstacle Detection</h3>
+                    <p>Integrated HC-SR04 ultrasonic sensor with software filtering for reliable distance measurement.</p>
+                    <button class="action-btn" id="viewSensorBtn">
+                        <i class="fas fa-ruler"></i> Sensor Specs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Copy code functionality
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const code = document.getElementById('codeBlock').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                this.textContent = 'Copied!';
+                setTimeout(() => {
+                    this.textContent = 'Copy Code';
+                }, 2000);
+            });
+        });
+
+        // Image click handler
+        document.getElementById('projectImage').addEventListener('click', function() {
+            window.open(this.src, '_blank');
+        });
+
+        // Button click handlers
+        document.getElementById('viewDemoBtn').addEventListener('click', function() {
+            alert("Demo video would open in a new window. This is a prototype.");
+        });
+
+        document.getElementById('viewDetailsBtn').addEventListener('click', function() {
+            alert("Technical details would be displayed here.");
+        });
+
+        document.getElementById('viewSensorBtn').addEventListener('click', function() {
+            alert("Sensor specifications would be displayed here.");
+        });
+
+        // Add light trail effect to buttons
+        const buttons = document.querySelectorAll('.action-btn');
+        buttons.forEach(btn => {
+            const trail = document.createElement('div');
+            trail.className = 'light-trail';
+            btn.appendChild(trail);
+            
+            const randomDelay = Math.random() * 5;
+            const randomDuration = 4 + Math.random() * 4;
+            trail.style.animation = `light-run ${randomDuration}s linear ${randomDelay}s infinite`;
+        });
+    </script>
+</body>
+</html>
