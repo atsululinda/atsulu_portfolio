@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="profile">
+                <div class="avatar">
+                    <div class="avatar-inner"></div>
+                    <div class="avatar-eyes"></div>
+                </div>
+            </div>
+            <h1 class="logo">ATSULU LINDAH</h1>
+            <h2 class="subtitle">LITERATURE AND PROGRAMMING</h2>
+            <div class="flame-line">
+          
+            </div>
+            <p class="tagline">"Freelancing since 2019 to date"</p>
+            
+            <div class="contact-btn">
+                <span class="btn-text">CONTACT</span>
+                <div class="light-trail"></div>
+            </div>
+            
+<div class="free-service-btn" onclick="window.open('../portfolio/articles/linda.pdf', '_blank')">
+    <span class="btn-text">MY RESUME</span>
+    <div class="light-trail"></div>
+</div>
+            
+            <div class="info-box">
+                <div class="info-lines">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="grid-container">
+                <!-- Row 1 -->
+                <div class="grid-item" data-category="apps">
+                    <div class="icon"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="text">ROBOTICS PROGRAMMING</div>
+                    <div class="light-trail"></div>
+                </div>
+				
+			    <div class="grid-item" data-category="research">
+                    <div class="icon"><i class="fas fa-search"></i></div>
+                    <div class="text">RESEARCH</div>
+                    <div class="light-trail"></div>
+                </div>
+                
+                
+                <div class="grid-item" data-category="art-cites">
+                    <div class="icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="text">AUTOMATION</div>
+                    <div class="light-trail"></div>
+                </div>
+                
+                <!-- Row 2 -->
+                <div class="grid-item" data-category="articles">
+                    <div class="icon"><i class="fas fa-newspaper"></i></div>
+                    <div class="text">ARTICLES WRITTEN</div>
+                    <div class="light-trail"></div>
+                </div>
+                
+                <!-- Row 3 -->
+                <div class="grid-item" data-category="projects">
+                    <div class="icon"><i class="fas fa-project-diagram"></i></div>
+                    <div class="text">WEBSITE SAMPLES</div>
+                    <div class="light-trail"></div>
+                </div>
+                
+                <div class="grid-item" data-category="data">
+                    <div class="icon"><i class="fas fa-database"></i></div>
+                    <div class="text">DATA COLLECTED</div>
+                    <div class="light-trail"></div>
+                </div>
+                
+                <!-- Row 4 -->
+                <div class="grid-item" data-category="visualization">
+                    <div class="icon"><i class="fas fa-chart-bar"></i></div>
+                    <div class="text">VISUALIZATION</div>
+                    <div class="light-trail"></div>
+                </div>
+                
+                <div class="grid-item" data-category="powerpoint">
+                    <div class="icon"><i class="fas fa-file-powerpoint"></i></div>
+                    <div class="text">POWERPOINT</div>
+                    <div class="light-trail"></div>
+                </div>
+                
+                <!-- Row 5 -->
+                <div class="grid-item" data-category="machine-learning">
+                    <div class="icon"><i class="fas fa-brain"></i></div>
+                    <div class="text">MACHINE LEARNING</div>
+                    <div class="light-trail"></div>
+                </div>
+     
+                <div class="grid-item" data-category="games">
+                    <div class="icon"><i class="fas fa-gamepad"></i></div>
+                    <div class="text">GAMES DEVELOPED</div>
+                    <div class="light-trail"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for content -->
+    <div class="modal" id="contentModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalTitle">Title</h2>
+            <div id="modalContent">Content here</div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
