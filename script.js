@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <span>Python (Raspberry Pi)</span>
             <span>Flask Web Interface</span>
         </div>
-        <button class="action-btn" onclick="window.open('../portfolio/robotics/arduino_1.html', '_blank')">
+        <button class="action-btn" onclick="window.open('../atsulu_portfolio/robotics/arduino_1.html', '_blank')">
             <i class="fas fa-robot"></i> View Full Project
         </button>
     </div>
@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <h3>Arduino and Raspberry pi</h3>
         <p>An autonomous vehicle with obstacle avoidance capabilities, controlled via Raspberry Pi GPIO and Python. Features both manual and autonomous driving modes.</p>
         <div class="tech-stack">Python · Raspberry Pi · gpiozero · L298N · Ultrasonic Sensor</div>
-        <button class="action-btn" onclick="window.open('../portfolio/robotics/raspandarduino_1.html', '_blank')">
+        <button class="action-btn" onclick="window.open('../atsulu_portfolio/robotics/raspandarduino_1.html', '_blank')">
             <i class="fas fa-external-link-alt"></i> View Project Details
         </button>
     </div>
