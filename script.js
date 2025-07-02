@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.innerHTML = `
             <div class="contact-form">
                 <div class="contact-info">
-                    <h3>Dennis Maran</h3>
+                    <h3>Linda Atsulu</h3>
                     <p><i class="fas fa-phone-alt"></i> 0798228780</p>
                     <p><i class="fas fa-envelope"></i> lindaatsulu@gmail.com</p>
                     <div class="social-links">
