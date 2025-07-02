@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml xmlns="https://developers.google.com/blockly/xml" is_dbot="true" collection="false">
+    <variables>
+        <variable id="INITIAL_BALANCE">account_balance</variable>
+        <variable id="RISK_PER_TRADE">0.02</variable>
+        <variable id="MAX_DAILY_LOSS">0.1</variable>
+        <variable id="PROFIT_TARGET">0.15</variable>
+        <variable id="ATR_PERIOD">14</variable>
+        <variable id="RSI_PERIOD">14</variable>
+        <variable id="BOLLINGER_PERIOD">20</variable>
+        <variable id="MARTINGALE_FACTOR">1.5</variable>
+        <variable id="CURRENT_STREAK">0</variable>
+        <variable id="WIN_COUNT">0</variable>
+        <variable id="TOTAL_TRADES">0</variable>
+    </variables>
+
+    <block type="trade_definition" deletable="false">
+        <statement name="TRADE_OPTIONS">
+            <block type="trade_definition_market" deletable="false" movable="false">
+                <field name="MARKET_LIST">synthetic_index</field>
+                <field name="SUBMARKET_LIST">random_index</field>
+                <field name="SYMBOL_LIST">1HZ10V</field>
+                <next>
+                    <block type="trade_definition_tradetype" deletable="false" movable="false">
+                        <field name="TRADETYPECAT_LIST">callput</field>
+                        <field name="TRADETYPE_LIST">callput</field>
+                        <next>
+                            <block type="trade_definition_contracttype" deletable="false" movable="false">
+                                <field name="TYPE_LIST">both</field>
+                                <next>
+                                    <block type="trade_definition_candleinterval" deletable="false" movable="false">
+                                        <field name="CANDLEINTERVAL_LIST">60</field>
+                                        <next>
+                                            <block type="trade_definition_restartbuysell" deletable="false" movable="false">
+                                                <field name="TIME_MACHINE_ENABLED">FALSE</field>
+                                                <next>
+                                                    <block type="trade_definition_restartonerror" deletable="false" movable="false">
+                                                        <field name="RESTARTONERROR">TRUE</field>
+                                                    </block>
+                                                </next>
+                                            </block>
+                                        </next>
+                                    </block>
+                                </next>
+                            </block>
+                        </next>
+                    </block>
+                </next>
+            </block>
+        </statement>
+
+        <statement name="INITIALIZATION">
+            <block type="variables_set">
+                <field name="VAR">ATR_VALUE</field>
+                <value name="VALUE">
+                    <block type="indicator">
+                        <field name="INDICATOR">atr</field>
+                        <field name="PERIOD">14</field>
+                    </block>
+                </value>
+                <next>
+                    <block type="variables_set">
+                        <field name="VAR">RSI_VALUE</field>
+                        <value name="VALUE">
+                            <block type="indicator">
+                                <field name="INDICATOR">rsi</field>
+                                <field name="PERIOD">14</field>
+                            </block>
+                        </value>
+                        <next>
+                            <block type="variables_set">
+                                <field name="VAR">BB_UPPER</field>
+                                <value name="VALUE">
+                                    <block type="indicator">
+                                        <field name="INDICATOR">bb_upper</field>
+                                        <field name="PERIOD">20</field>
+                                        <field name="STD_DEV">2</field>
+                                    </block>
+                                </value>
+                                <next>
+                                    <block type="variables_set">
+                                        <field name="VAR">BB_LOWER</field>
+                                        <value name="VALUE">
+                                            <block type="indicator">
+                                                <field name="INDICATOR">bb_lower</field>
+                                                <field name="PERIOD">20</field>
+                                                <field name="STD_DEV">2</field>
+                                            </block>
+                                        </value>
+                                    </block>
+                                </next>
+                            </block>
+                        </next>
+                    </block>
+                </next>
+            </block>
+        </statement>
+
+        <statement name="BEFORE_PURCHASE">
+            <block type="controls_if">
+                <value name="IF0">
+                    <block type="logic_operation">
+                        <field name="OP">AND</field>
+                        <value name="A">
+                            <block type="logic_compare">
+                                <field name="OP">GT</field>
+                                <value name="A">
+                                    <block type="total_profit"/>
+                                </value>
+                                <value name="B">
+                                    <block type="math_arithmetic">
+                                        <field name="OP">MULTIPLY</field>
+                                        <value name="A">
+                                            <block type="variables_get">
+                                                <field name="VAR">INITIAL_BALANCE</field>
+                                            </block>
+                                        </value>
+                                        <value name="B">
+                                            <block type="math_number">
+                                                <field name="NUM">-0.1</field>
+                                            </block>
+                                        </value>
+                                    </block>
+                                </value>
+                            </block>
+                        </value>
+                        <value name="B">
+                            <block type="logic_compare">
+                                <field name="OP">LT</field>
+                                <value name="A">
+                                    <block type="total_profit"/>
+                                </value>
+                                <value name="B">
+                                    <block type="math_arithmetic">
+                                        <field name="OP">MULTIPLY</field>
+                                        <value name="A">
+                                            <block type="variables_get">
+                                                <field name="VAR">INITIAL_BALANCE</field>
+                                            </block>
+                                        </value>
+                                        <value name="B">
+                                            <block type="math_number">
+                                                <field name="NUM">0.15</field>
+                                            </block>
+                                        </value>
+                                    </block>
+                                </value>
+                            </block>
+                        </value>
+                    </block>
+                </value>
+                <statement name="DO0">
+                    <block type="controls_if">
+                        <mutation else="1"/>
+                        <value name="IF0">
+                            <block type="logic_operation">
+                                <field name="OP">AND</field>
+                                <value name="A">
+                                    <block type="logic_compare">
+                                        <field name="OP">LT</field>
+                                        <value name="A">
+                                            <block type="variables_get">
+                                                <field name="VAR">RSI_VALUE</field>
+                                            </block>
+                                        </value>
+                                        <value name="B">
+                                            <block type="math_number">
+                                                <field name="NUM">30</field>
+                                            </block>
+                                        </value>
+                                    </block>
+                                </value>
+                                <value name="B">
+                                    <block type="logic_compare">
+                                        <field name="OP">LT</field>
+                                        <value name="A">
+                                            <block type="ticks"/>
+                                        </value>
+                                        <value name="B">
+                                            <block type="variables_get">
+                                                <field name="VAR">BB_LOWER</field>
+                                            </block>
+                                        </value>
+                                    </block>
+                                </value>
+                            </block>
+                        </value>
+                        <statement name="DO0">
+                            <block type="purchase">
+                                <field name="PURCHASE_LIST">CALL</field>
+                            </block>
+                        </statement>
+                        <statement name="ELSE">
+                            <block type="controls_if">
+                                <value name="IF0">
+                                    <block type="logic_operation">
+                                        <field name="OP">AND</field>
+                                        <value name="A">
+                                            <block type="logic_compare">
+                                                <field name="OP">GT</field>
+                                                <value name="A">
+                                                    <block type="variables_get">
+                                                        <field name="VAR">RSI_VALUE</field>
+                                                    </block>
+                                                </value>
+                                                <value name="B">
+                                                    <block type="math_number">
+                                                        <field name="NUM">70</field>
+                                                    </block>
+                                                </value>
+                                            </block>
+                                        </value>
+                                        <value name="B">
+                                            <block type="logic_compare">
+                                                <field name="OP">GT</field>
+                                                <value name="A">
+                                                    <block type="ticks"/>
+                                                </value>
+                                                <value name="B">
+                                                    <block type="variables_get">
+                                                        <field name="VAR">BB_UPPER</field>
+                                                    </block>
+                                                </value>
+                                            </block>
+                                        </value>
+                                    </block>
+                                </value>
+                                <statement name="DO0">
+                                    <block type="purchase">
+                                        <field name="PURCHASE_LIST">PUT</field>
+                                    </block>
+                                </statement>
+                            </block>
+                        </statement>
+                    </block>
+                </statement>
+            </block>
+        </statement>
+
+        <statement name="DURING_PURCHASE">
+            <block type="controls_if">
+                <value name="IF0">
+                    <block type="check_sell"/>
+                </value>
+                <statement name="DO0">
+                    <block type="sell_at_market"/>
+                </statement>
+            </block>
+        </statement>
+
+        <statement name="AFTER_PURCHASE">
+            <block type="controls_if">
+                <mutation else="1"/>
+                <value name="IF0">
+                    <block type="contract_check_result">
+                        <field name="CHECK_RESULT">win</field>
+                    </block>
+                </value>
+                <statement name="DO0">
+                    <block type="variables_set">
+                        <field name="VAR">WIN_COUNT</field>
+                        <value name="VALUE">
+                            <block type="math_arithmetic">
+                                <field name="OP">ADD</field>
+                                <value name="A">
+                                    <block type="variables_get">
+                                        <field name="VAR">WIN_COUNT</field>
+                                    </block>
+                                </value>
+                                <value name="B">
+                                    <block type="math_number">
+                                        <field name="NUM">1</field>
+                                    </block>
+                                </value>
+                            </block>
+                        </value>
+                    </block>
+                </statement>
+                <statement name="ELSE">
+                    <block type="variables_set">
+                        <field name="VAR">CURRENT_STAKE</field>
+                        <value name="VALUE">
+                            <block type="math_arithmetic">
+                                <field name="OP">MULTIPLY</field>
+                                <value name="A">
+                                    <block type="variables_get">
+                                        <field name="VAR">CURRENT_STAKE</field>
+                                    </block>
+                                </value>
+                                <value name="B">
+                                    <block type="variables_get">
+                                        <field name="VAR">MARTINGALE_FACTOR</field>
+                                    </block>
+                                </value>
+                            </block>
+                        </value>
+                    </block>
+                </statement>
+                <next>
+                    <block type="trade_again"/>
+                </next>
+            </block>
+        </statement>
+    </block>
+</xml>

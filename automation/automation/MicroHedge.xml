@@ -1,0 +1,73 @@
+<xml xmlns="https://developers.google.com/blockly/xml" is_dbot="true" collection="false">
+  <block type="trade_definition" id="trade_definition" deletable="false" x="0" y="0">
+    <statement name="TRADE_OPTIONS">
+      <block type="trade_definition_market" id="market_definition" deletable="false" movable="false">
+        <field name="MARKET_LIST">synthetic_index</field>
+        <field name="SUBMARKET_LIST">random_index</field>
+        <field name="SYMBOL_LIST">R_10</field>
+        <next>
+          <block type="trade_definition_tradetype" id="tradetype_definition" deletable="false" movable="false">
+            <field name="TRADETYPECAT_LIST">callput</field>
+            <field name="TRADETYPE_LIST">callput</field>
+            <next>
+              <block type="trade_definition_contracttype" id="contracttype_definition" deletable="false" movable="false">
+                <field name="TYPE_LIST">both</field>
+                <next>
+                  <block type="trade_definition_candleinterval" id="candleinterval_definition" deletable="false" movable="false">
+                    <field name="CANDLEINTERVAL_LIST">60</field>
+                    <next>
+                      <block type="trade_definition_restartbuysell" id="restart_definition" deletable="false" movable="false">
+                        <field name="TIME_MACHINE_ENABLED">FALSE</field>
+                        <next>
+                          <block type="trade_definition_restartonerror" id="restartonerror_definition" deletable="false" movable="false">
+                            <field name="RESTARTONERROR">TRUE</field>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+    <statement name="SUBMARKET">
+      <block type="trade_definition_tradeoptions" id="tradeoptions_definition">
+        <field name="DURATIONTYPE_LIST">t</field>
+        <value name="DURATION">
+          <block type="math_number_positive" id="duration_blocks">
+            <field name="NUM">5</field>
+          </block>
+        </value>
+        <value name="AMOUNT">
+          <block type="math_number_positive" id="amount_blocks">
+            <field name="NUM">0.35</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="before_purchase" id="purchase_conditions" deletable="false" x="0" y="350">
+    <statement name="BEFOREPURCHASE_STACK">
+      <block type="purchase" id="purchase_execution">
+        <field name="PURCHASE_LIST">CALL</field>
+      </block>
+    </statement>
+  </block>
+  <block type="during_purchase" id="during_purchase_block" x="0" y="500">
+    <statement name="DURING_PURCHASE_STACK">
+      <block type="controls_if" id="sell_check">
+        <value name="IF0">
+          <block type="check_sell" id="sell_condition"></block>
+        </value>
+      </block>
+    </statement>
+  </block>
+  <block type="after_purchase" id="after_purchase_block" x="0" y="650">
+    <statement name="AFTERPURCHASE_STACK">
+      <block type="trade_again" id="trade_again_execution"></block>
+    </statement>
+  </block>
+</xml>
